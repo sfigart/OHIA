@@ -1,0 +1,12 @@
+<form class="form-signin" action="/login" method="post">
+  <h2 class="form-signin-heading">Please log in</h2>
+  <% if session[:message] %>
+    <div class="alert alert-error">
+      <%= session[:message] %>
+    </div>
+  <% session[:message] = nil %>
+  <% end %>
+  <input type="text" name="username" id="username" class="input-block-level" placeholder="Username">
+  <input type="password" name="password" id="password" class="input-block-level" placeholder="Password">
+  <button class="btn btn-large btn-primary" type="submit">Log in</button>
+</form>

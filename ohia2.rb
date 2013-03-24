@@ -1,19 +1,16 @@
 class Ohia < Sinatra::Base
-  Rack::Session::Pool
+  use Rack::Session::Pool
 
-  # http://www.sinatrarb.com/faq.html#auth
+  set :username, ENV['username']
+  set :password, ENV['password']
+
   helpers do
-    def protected!
-      unless authorized?
-        response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
-        throw(:halt, [401, "Not authorized\n"])
-      end
+    def authenticated?
+      session[:authenticated] == true
     end
 
-    def authorized?
-      @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-      @auth.provided? && @auth.basic? && 
-      @auth.credentials && @auth.credentials == [ ENV['USER'], ENV['PASSWORD'] ]
+    def protected!
+      redirect '/login' unless authenticated?
     end
   end
 
@@ -21,5 +18,26 @@ class Ohia < Sinatra::Base
     protected!
 
     erb :index
+  end
+
+  get '/login' do
+    erb :login, :layout => :layout_login
+  end
+
+  post '/login' do
+    params.inspect
+    if params['username'] == settings.username &&
+      params['password'] == settings.password
+      session[:authenticated] = true
+      redirect '/'
+    else
+      session[:message] = "Username or Password incorrect"
+      erb :login, :layout => :layout_login
+    end
+  end
+
+  get '/logout' do
+    session[:authenticated] = nil
+    redirect '/login'
   end
 end
