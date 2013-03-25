@@ -1,7 +1,7 @@
 class Ohia < Sinatra::Base
   use Rack::Session::Pool
 
-  set :username, ENV['username']
+  set :username, ENV['username'] # heroku config
   set :password, ENV['password']
 
   helpers do
@@ -27,7 +27,7 @@ class Ohia < Sinatra::Base
   post '/login' do
     params.inspect
     if params['username'] == settings.username &&
-      params['password'] == settings.password
+       params['password'] == settings.password
       session[:authenticated] = true
       redirect '/'
     else
