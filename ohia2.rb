@@ -4,6 +4,11 @@ class Ohia < Sinatra::Base
   set :username, ENV['username'] # heroku config
   set :password, ENV['password']
 
+  configure :production do
+    require 'rack-ssl-enforcer'
+    use Rack::SslEnforcer
+  end
+
   helpers do
     def authenticated?
       session[:authenticated] == true
