@@ -1,4 +1,5 @@
 class Ohia < Sinatra::Base
+=begin  
   use Rack::Session::Pool
 
   set :username, ENV['username'] # heroku config
@@ -18,13 +19,13 @@ class Ohia < Sinatra::Base
       redirect '/login' unless authenticated?
     end
   end
-
+=end
   get '/' do
-    protected!
+    #protected!
 
     erb :index
   end
-
+=begin
   get '/login' do
     erb :login, :layout => :layout_login
   end
@@ -45,4 +46,5 @@ class Ohia < Sinatra::Base
     session[:authenticated] = nil
     redirect '/login'
   end
+=end
 end
